@@ -22,7 +22,7 @@ class Crawler {
         await this.crawlUrl(this.startUrl, this.siteTree);
         console.log(`Crawling complete. Found ${this.externalUrls.size} external links.`);
         console.log("External URLs:", Array.from(this.externalUrls));
-        console.log("Site Tree:", JSON.stringify(this.siteTree, null, 2));
+        console.log("Site Tree:", this.siteTree);
     }
 
     async crawlUrl(currentUrl, treeNode, depth = 1) {
