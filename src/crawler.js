@@ -5,6 +5,7 @@ const url = require('url');
 class Crawler {
     visitedUrls = new Set();
     externalUrls = new Set();
+    siteTree = {};
 
     constructor(startUrl, maxDepth = 3) {
         if (!startUrl || !startUrl.startsWith('http')) {
@@ -17,12 +18,14 @@ class Crawler {
     }
 
     async crawl() {
-        await this.crawlUrl(this.startUrl);
+        this.siteTree = { url: this.startUrl, depth: 0, children: [] };
+        await this.crawlUrl(this.startUrl, this.siteTree);
         console.log(`Crawling complete. Found ${this.externalUrls.size} external links.`);
         console.log("External URLs:", Array.from(this.externalUrls));
+        console.log("Site Tree:", JSON.stringify(this.siteTree, null, 2));
     }
 
-    async crawlUrl(currentUrl, depth = 1) {
+    async crawlUrl(currentUrl, treeNode, depth = 1) {
         if (depth > this.maxDepth || this.visitedUrls.has(currentUrl)) {
             return;
         }
@@ -44,13 +47,13 @@ class Crawler {
                     if (resolvedUrl.startsWith(this.startDomain)) {
                         // Internal link
                         if (!this.visitedUrls.has(resolvedUrl)) {
-                            links.push(resolvedUrl);
+                            links.push({ url: resolvedUrl, depth, children: [], external: false });
                         } else {
                             console.warn(`Already visited: ${resolvedUrl}`);
                         }
                     } else {
                         // External link
-                        this.externalUrls.add(resolvedUrl);
+                        links.push({ url: resolvedUrl, depth, children: [], external: true });
                     }
                 } else {
                     console.warn(`Found a link with no href attribute: ${$(el).html()}`);
@@ -59,9 +62,16 @@ class Crawler {
 
             console.log(`Found ${links.length} links on ${currentUrl}`);
 
+            // Attach children to the current tree node
+            treeNode.children = links;
+
             // Recursively crawl each of the found links
-            for (const link of links) {
-                await this.crawlUrl(link, depth + 1);
+            for (const childNode of treeNode.children) {
+                if (childNode.external) {
+                    this.externalUrls.add(childNode.url);
+                    continue;
+                }
+                await this.crawlUrl(childNode.url, childNode, depth + 1);
             }
         } catch (error) {
             console.error(`Error crawling ${currentUrl}: ${error.message}`);
