@@ -7,6 +7,7 @@
     "crawler-cli": ".bin/crawler-cli"
   },
   "scripts": {
+    "start:web-server": "node test/web/server.js",
     "format": "prettier --write ."
   },
   "keywords": [],
