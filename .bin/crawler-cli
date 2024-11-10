@@ -16,14 +16,21 @@ const argv = yargs
         default: 3,
         describe: 'The maximum depth to crawl',
     })
+    .option('sitemap', {
+        alias: 'sm',
+        type: 'string',
+        default: false,
+        describe: 'Try using the sitemap instead of crawling the site',
+    })
     .help()
     .alias('help', 'h')
     .argv;
 
 const startUrl = argv.url;
 const maxDepth = argv.depth;
+const sitemap = argv.sitemap;
 
-const crawler = new Crawler(startUrl, maxDepth);
+const crawler = new Crawler(startUrl, maxDepth, sitemap);
 try {
     crawler.crawl();
 } catch (error) {

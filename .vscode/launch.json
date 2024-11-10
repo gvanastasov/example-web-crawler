@@ -17,6 +17,8 @@
                 "http://localhost:8000",
                 "-d",
                 "3",
+                "--sitemap",
+                "http://localhost:8000/sitemap.xml"
             ],
         }
     ]
