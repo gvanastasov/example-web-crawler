@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 const yargs = require('yargs');
-const Crawler = require('./crawler-cli');
+const Crawler = require('../src/crawler.js');
 
 const argv = yargs
     .usage('Usage: $0 --url <startUrl> [--depth <maxDepth>]')
