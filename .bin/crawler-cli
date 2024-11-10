@@ -1,0 +1,31 @@
+#!/usr/bin/env node
+const yargs = require('yargs');
+const Crawler = require('./crawler-cli');
+
+const argv = yargs
+    .usage('Usage: $0 --url <startUrl> [--depth <maxDepth>]')
+    .option('url', {
+        alias: 'u',
+        type: 'string',
+        demandOption: true,
+        describe: 'The starting URL for the crawler',
+    })
+    .option('depth', {
+        alias: 'd',
+        type: 'number',
+        default: 3,
+        describe: 'The maximum depth to crawl',
+    })
+    .help()
+    .alias('help', 'h')
+    .argv;
+
+const startUrl = argv.url;
+const maxDepth = argv.depth;
+
+const crawler = new Crawler(startUrl, maxDepth);
+try {
+    crawler.crawl();
+} catch (error) {
+    console.error(`Error crawling ${startUrl}: ${error.message}`);
+}
