@@ -1,0 +1,19 @@
+#!/usr/bin/env node
+const Crawler = require('../src/crawler.js');
+
+const startUrl = 'http://localhost:8000';
+const maxDepth = 3;
+
+const crawler = new Crawler({
+  startUrl,
+  maxDepth,
+  hooks: {
+    onPageResponse: ({ url, cookies, status }) => {
+      console.log(`Page response for ${url}`);
+      console.log(`Status: ${status}`);
+      console.log(`Cookies: ${cookies.join('; ')}`);
+    },
+  },
+});
+
+crawler.crawl();
