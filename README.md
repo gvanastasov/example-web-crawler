@@ -1,4 +1,4 @@
-# Example Web Crawler 
+# Example Web Crawler
 
 This project demonstrates a simple web crawler written in Node.js. The crawler is capable of crawling websites, including detecting and parsing sitemaps, and logging external links. It also supports hooks to allow the user to log additional data, such as cookies from page responses. The crawler can be run from the command line and is highly customizable.
 
@@ -25,9 +25,9 @@ This crawler can be used for various purposes, including but not limited to:
 - Node.js (v14 or later) should be installed on your machine. You can download and install it from here.
 
 ### Steps to install
+
 1. Close this repository
 2. Install dependencies
-
 
 ## Usage
 
@@ -36,11 +36,13 @@ This crawler can be used for various purposes, including but not limited to:
 You can run the crawler directly from the command line. The crawler can either automatically detect the sitemap or use a custom sitemap URL passed as a parameter.
 
 Command Syntax:
+
 ```bash
 node crawler.js --url <start-url> --sitemap <sitemap-url> --max-depth <depth>
 ```
 
 Parameters:
+
 - --url <start-url>: The starting URL for the crawl (e.g., http://localhost:8000).
 - --sitemap <sitemap-url> (optional): A custom sitemap URL (e.g., http://localhost:8000/sitemap.xml). If not provided, the crawler will try to find it automatically via robots.txt or the default /sitemap.xml.
 - --max-depth <depth> (optional, default 3): The maximum depth to crawl (1 for just the starting page, 2 for the start page and linked pages, etc.).
@@ -54,9 +56,11 @@ node crawler.js --url http://localhost:8000 --sitemap http://localhost:8000/site
 ```
 
 ### Hooks
+
 You can customize the crawler's behavior by providing hooks. For example, you could log cookies from the response of each page.
 
 Here is an example of how to set up hooks in a custom JavaScript file:
+
 ```js
 const Crawler = require('./crawler');
 
@@ -64,11 +68,11 @@ const startUrl = 'http://localhost:8000';
 const maxDepth = 3;
 
 const crawler = new Crawler(startUrl, maxDepth, {
-    onPageResponse: ({ url, cookies, status }) => {
-        console.log(`Page response for ${url}`);
-        console.log(`Status: ${status}`);
-        console.log(`Cookies: ${cookies.join('; ')}`);
-    }
+  onPageResponse: ({ url, cookies, status }) => {
+    console.log(`Page response for ${url}`);
+    console.log(`Status: ${status}`);
+    console.log(`Cookies: ${cookies.join('; ')}`);
+  },
 });
 
 crawler.crawl();
