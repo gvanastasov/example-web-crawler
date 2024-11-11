@@ -7,8 +7,9 @@ class Crawler {
     visitedUrls = new Set();
     externalUrls = new Set();
     siteTree = {};
+    hooks = {};
 
-    constructor(startUrl, maxDepth = 3, sitemapUrl = null) {
+    constructor(startUrl, maxDepth = 3, sitemapUrl = null, hooks = {}) {
         if (!startUrl || !startUrl.startsWith('http')) {
             throw new Error('Invalid start URL');
         }
@@ -17,6 +18,7 @@ class Crawler {
         this.startDomain = new URL(startUrl).origin;
         this.maxDepth = maxDepth;
         this.sitemapUrl = sitemapUrl;
+        this.hooks = hooks;
     }
 
     async crawl() {
@@ -43,7 +45,17 @@ class Crawler {
 
             // Fetch the page content
             const response = await axios.get(currentUrl);
+
+            if (this.hooks.onPageResponse) {
+                const cookies = response.headers['set-cookie'] || [];
+                this.hooks.onPageResponse({ url: currentUrl, cookies, status: response.status });
+            }
+
             const $ = cheerio.load(response.data);
+
+            if (this.hooks.onPageLoad) {
+                this.hooks.onPageLoad({ url: currentUrl, $ });
+            }
 
             const links = [];
             $('a').each((i, el) => {
