@@ -3,36 +3,35 @@ const yargs = require('yargs');
 const Crawler = require('../src/crawler.js');
 
 const argv = yargs
-    .usage('Usage: $0 --url <startUrl> [--depth <maxDepth>]')
-    .option('url', {
-        alias: 'u',
-        type: 'string',
-        demandOption: true,
-        describe: 'The starting URL for the crawler',
-    })
-    .option('depth', {
-        alias: 'd',
-        type: 'number',
-        default: 3,
-        describe: 'The maximum depth to crawl',
-    })
-    .option('sitemap', {
-        alias: 'sm',
-        type: 'string',
-        default: false,
-        describe: 'Try using the sitemap instead of crawling the site',
-    })
-    .help()
-    .alias('help', 'h')
-    .argv;
+  .usage('Usage: $0 --url <startUrl> [--depth <maxDepth>]')
+  .option('url', {
+    alias: 'u',
+    type: 'string',
+    demandOption: true,
+    describe: 'The starting URL for the crawler',
+  })
+  .option('depth', {
+    alias: 'd',
+    type: 'number',
+    default: 3,
+    describe: 'The maximum depth to crawl',
+  })
+  .option('sitemap', {
+    alias: 'sm',
+    type: 'string',
+    default: false,
+    describe: 'Try using the sitemap instead of crawling the site',
+  })
+  .help()
+  .alias('help', 'h').argv;
 
 const startUrl = argv.url;
 const maxDepth = argv.depth;
 const sitemap = argv.sitemap;
 
-const crawler = new Crawler(startUrl, maxDepth, sitemap);
+const crawler = new Crawler({ startUrl, maxDepth, sitemap });
 try {
-    crawler.crawl();
+  crawler.crawl();
 } catch (error) {
-    console.error(`Error crawling ${startUrl}: ${error.message}`);
+  console.error(`Error crawling ${startUrl}: ${error.message}`);
 }
